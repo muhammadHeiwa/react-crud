@@ -1,45 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from './Button';
 import '../styles/FormInput.css';
 
-class FormInput extends React.Component {
-	state = {
-		text: '',
-	};
-	change = (e) => {
-		this.setState({ text: e.target.value });
-	};
-	submit = (e) => {
-		e.preventDefault();
-		if (this.state.text !== '') {
-			this.props.add(this.state.text);
-		}
-		this.setState({ text: '' });
-	};
-	render() {
-		return (
-			<form
-				style={inputForm}
-				onSubmit={this.submit}
-			>
-				<input
-					type="text"
-					onChange={this.change}
-					value={this.state.text}
-					style={input}
-					placeholder="add task"
-				/>
-				<Button
-					text="add"
-					variant="primary"
-					action={this.submit}
-				/>
-			</form>
-		);
-	}
-}
+export default function FormInput({add}) {
+	const [text, setText] = useState('');
 
-export default FormInput;
+	const change = (e) => {
+		setText(e.target.value)
+	}
+
+	const submit = (e) => {
+		e.preventDefault();
+		if(text !== ''){
+			add(text);
+		}
+		setText('');
+	};
+
+	return (
+		<form
+			style={inputForm}
+			onSubmit={submit}
+		>
+			<input
+				type="text"
+				onChange={change}
+				value={text}
+				style={input}
+				placeholder="add task"
+			/>
+			<Button
+				text="add"
+				variant="primary"
+				action={submit}
+			/>
+		</form>
+	);
+};
+
 
 const inputForm = {
 	background: '#fff',

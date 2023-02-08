@@ -5,18 +5,13 @@ import EditModal from './components/EditModal';
 import logo from './logo.svg';
 import './App.css';
 import DeleteModal from './components/DeleteModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { add, del, update } from './store/actions/task';
 
 const App = () => {
-    const [todos, setTodos] = useState([
-        {
-            id: 1,
-            title: "Reading a Book"
-        },
-        {
-            id: 2,
-            title: "Sleep"
-        }
-    ]);
+
+    const { todos } = useSelector(state => state.task);
+    const dispatch = useDispatch();
     
     const [isEdit, SetIsEdit] = useState(false);
     const [isDelete, SetIsDelete] = useState(false);
@@ -30,12 +25,8 @@ const App = () => {
 
     // Add Section
     const addTask = (data) => {
-        const id = todos.length;
-        const newData = {
-            id: id + 1,
-            title: data
-        };
-        setTodos([...todos, newData])
+        const title = data
+        dispatch(add(title))
     }
 
     // Close Modal
@@ -60,12 +51,12 @@ const App = () => {
         })
     };
 
-    const update = () => {
+    const handleUpdate = () => {
         const {id, title} = editData;
         const newData = {id, title}
         const newTodos = todos;
         newTodos.splice(id - 1, 1, newData);
-        setTodos(newTodos);
+        dispatch(update(newTodos));
         SetIsEdit(false);
         setEditData({
             id: '',
@@ -81,7 +72,7 @@ const App = () => {
 
     const deleteTask = () => {
         const id = delData.id;
-        setTodos(todos.filter((item) => item.id !== id))
+        dispatch(del(id));
         SetIsDelete(false);
     }
 
@@ -112,7 +103,7 @@ const App = () => {
                 close={closeModal}
                 change={setTitle}
                 data={editData}
-                update={update}
+                update={handleUpdate}
             />
             <DeleteModal
                 isDelete={isDelete}
